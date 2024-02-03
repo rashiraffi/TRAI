@@ -1,6 +1,5 @@
 /*
 Copyright © 2024 Rashi M rashi1281@gmail.com
-
 */
 package cmd
 
@@ -64,14 +63,26 @@ func initConfig() {
 
 		// Search config in home directory with name ".trai" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigType("yaml")
+		viper.SetConfigType("json")
 		viper.SetConfigName(".trai")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+	if err := viper.ReadInConfig(); err != nil {
+		fmt.Fprintln(os.Stderr, "Config File empty")
+	} else {
+		fmt.Println("Reading File", viper.ConfigFileUsed())
 	}
+	// If a config file is found, read it in.
+	// if err := viper.ReadInConfig(); err != nil {
+	// 	if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+	// 		viper.SetDefault("kafka.default_profile", "default")
+	// 		viper.SetDefault("kafka.profile.default.host", "localhost:9092")
+	// 		viper.SafeWriteConfig()
+	// 	} else {
+	// 		fmt.Println("Error reading config file:", err)
+	// 	}
+	// }
 }
