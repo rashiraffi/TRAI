@@ -22,9 +22,9 @@ func Ask(ctx context.Context, query string) {
 
 	// For text-only input, use the gemini-pro model
 	model := client.GenerativeModel("gemini-pro")
-	instructions := genai.Text("ensure that the response is formatted neatly for terminal display, as it will be printed directly to the terminal for readability.")
 	prompt := genai.Text(query)
-	iter := model.GenerateContentStream(ctx, instructions, prompt)
+	instructions := []genai.Part{prompt}
+	iter := model.GenerateContentStream(ctx, instructions...)
 
 	for {
 		resp, err := iter.Next()
