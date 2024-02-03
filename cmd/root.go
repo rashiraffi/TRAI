@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/rashiraffi/TRAI/internal/config"
+	"github.com/rashiraffi/trai/internal/config"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

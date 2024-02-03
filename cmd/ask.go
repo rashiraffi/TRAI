@@ -7,7 +7,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/rashiraffi/TRAI/internal/ask"
+	"github.com/rashiraffi/trai/internal/ask"
 
 	"github.com/spf13/cobra"
 )
