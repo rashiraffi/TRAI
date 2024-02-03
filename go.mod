@@ -1,4 +1,4 @@
-module trai
+module github.com/rashiraffi/TRAI
 
 go 1.21.6
 

@@ -6,7 +6,8 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"trai/internal/config"
+
+	"github.com/rashiraffi/TRAI/internal/config"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

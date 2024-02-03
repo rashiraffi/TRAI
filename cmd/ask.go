@@ -6,7 +6,8 @@ package cmd
 import (
 	"context"
 	"strings"
-	"trai/internal/ask"
+
+	"github.com/rashiraffi/TRAI/internal/ask"
 
 	"github.com/spf13/cobra"
 )

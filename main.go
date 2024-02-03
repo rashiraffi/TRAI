@@ -1,10 +1,9 @@
 /*
 Copyright © 2024 Rashi M rashi1281@gmail.com
-
 */
 package main
 
-import "trai/cmd"
+import "github.com/rashiraffi/TRAI/cmd"
 
 func main() {
 	cmd.Execute()
