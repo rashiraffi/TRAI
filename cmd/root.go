@@ -6,6 +6,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"trai/internal/config"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -71,18 +72,9 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {
-		fmt.Fprintln(os.Stderr, "Config File empty")
-	} else {
-		fmt.Println("Reading File", viper.ConfigFileUsed())
+		fmt.Println("Config file not found, setting up configuration")
+		err := config.SetConfig()
+		cobra.CheckErr(err)
+		viper.SafeWriteConfig()
 	}
-	// If a config file is found, read it in.
-	// if err := viper.ReadInConfig(); err != nil {
-	// 	if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-	// 		viper.SetDefault("kafka.default_profile", "default")
-	// 		viper.SetDefault("kafka.profile.default.host", "localhost:9092")
-	// 		viper.SafeWriteConfig()
-	// 	} else {
-	// 		fmt.Println("Error reading config file:", err)
-	// 	}
-	// }
 }
