@@ -13,15 +13,16 @@ import (
 
 // askCmd represents the ask command
 var askCmd = &cobra.Command{
-	Use:   "ask",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Use:   `ask "question"`,
+	Short: "Ask any question and get an AI-powered response",
+	Long: `The 'ask' command within the 'trai' application enables users to ask any question and receive an AI-powered response.
+This command seamlessly integrates AI capabilities into the terminal environment, allowing users to obtain information or
+assistance on various topics.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			cmd.Help()
+			return
+		}
 		ask.Ask(context.Background(), strings.Join(args, " "))
 	},
 }
