@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os/exec"
 	"strings"
 
 	"github.com/google/generative-ai-go/genai"
@@ -12,7 +13,14 @@ import (
 	"google.golang.org/api/option"
 )
 
-func Ask(ctx context.Context, query string) {
+type AskParams struct {
+	Query string
+	IsCmd bool
+	Run   bool
+}
+
+func Ask(ctx context.Context, params AskParams) {
+
 	// Access your API key as an environment variable (see "Set up your API key" above)
 	client, err := genai.NewClient(ctx, option.WithAPIKey(viper.GetString("api_key")))
 	if err != nil {
@@ -22,14 +30,22 @@ func Ask(ctx context.Context, query string) {
 
 	// For text-only input, use the gemini-pro model
 	model := client.GenerativeModel("gemini-pro")
-	prompt := genai.Text(query)
-	instructions := []genai.Part{prompt}
+	var instructions []genai.Part
+	var prompt genai.Text
+	if params.IsCmd {
+		prompt = genai.Text(fmt.Sprintf("user: %s", params.Query))
+		instructions = append(instructions, cmdPromptParts...)
+		instructions = append(instructions, prompt)
+	} else {
+		prompt = genai.Text(params.Query)
+		instructions = []genai.Part{prompt}
+	}
+
 	iter := model.GenerateContentStream(ctx, instructions...)
 
 	for {
 		resp, err := iter.Next()
 		if err == iterator.Done {
-			fmt.Print("\n")
 			break
 		}
 		if err != nil {
@@ -38,7 +54,18 @@ func Ask(ctx context.Context, query string) {
 			}
 			log.Fatal("Me", err)
 		}
-		printResponse(resp)
+
+		if params.IsCmd && params.Run {
+			cmdStr := getResponse(resp)
+			fmt.Println("Running command:", cmdStr)
+			cmd := exec.Command("bash", "-c", cmdStr)
+			err := cmd.Run()
+			if err != nil {
+				fmt.Println("Error running command:", err.Error())
+			}
+		} else {
+			printResponse(resp)
+		}
 	}
 }
 
@@ -50,4 +77,16 @@ func printResponse(resp *genai.GenerateContentResponse) {
 			}
 		}
 	}
+}
+
+func getResponse(resp *genai.GenerateContentResponse) string {
+	res := ""
+	for _, cand := range resp.Candidates {
+		if cand.Content != nil {
+			for _, part := range cand.Content.Parts {
+				res += fmt.Sprintf("%v", part)
+			}
+		}
+	}
+	return res
 }

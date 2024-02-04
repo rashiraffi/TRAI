@@ -12,6 +12,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var isCmd bool
+var runCmd bool
+
 // askCmd represents the ask command
 var askCmd = &cobra.Command{
 	Use:   `ask "question"`,
@@ -24,20 +27,18 @@ assistance on various topics.`,
 			cmd.Help()
 			return
 		}
-		ask.Ask(context.Background(), strings.Join(args, " "))
+		ask.Ask(context.Background(), ask.AskParams{
+			Query: strings.Join(args, " "),
+			IsCmd: isCmd,
+			Run:   runCmd,
+		})
 	},
 }
 
 func init() {
+	askCmd.PersistentFlags().BoolVarP(&isCmd, "cmd", "c", false, "Ask for command")
+	askCmd.PersistentFlags().BoolVarP(&runCmd, "run", "r", false, "Run the asked command")
+
 	rootCmd.AddCommand(askCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// askCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// askCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
