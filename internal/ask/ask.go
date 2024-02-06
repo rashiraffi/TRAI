@@ -55,7 +55,7 @@ func Ask(ctx context.Context, params AskParams) {
 			log.Fatal("Me", err)
 		}
 
-		if params.IsCmd && params.Run {
+		if params.IsCmd && params.Run && false { // TODO: Remove false when ready to run commands
 			cmdStr := getResponse(resp)
 			fmt.Println("Running command:", cmdStr)
 			cmd := exec.Command("bash", "-c", cmdStr)
