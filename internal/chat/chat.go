@@ -1,9 +1,11 @@
 package chat
 
 import (
+	"bufio"
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/google/generative-ai-go/genai"
@@ -73,11 +75,21 @@ func Chat(ctx context.Context) {
 
 	for {
 
-		var msg string
-		fmt.Print("You: ")
-		fmt.Scanln(&msg)
+		var query string
+		fmt.Print("Ask: ")
+		reader := bufio.NewReader(os.Stdin)
+		query, err := reader.ReadString('\n')
+		if err != nil {
+			log.Fatal(err)
+		}
 
-		iter := cs.SendMessageStream(ctx, genai.Text(msg))
+		if query == "exit\n" {
+			break
+		} else if query == "\n" {
+			continue
+		}
+
+		iter := cs.SendMessageStream(ctx, genai.Text(query))
 		fmt.Print("AI: ")
 
 		for {
