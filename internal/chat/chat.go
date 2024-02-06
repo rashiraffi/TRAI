@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/fatih/color"
 	"github.com/google/generative-ai-go/genai"
 	"github.com/spf13/viper"
 	"google.golang.org/api/iterator"
@@ -26,57 +27,59 @@ func Chat(ctx context.Context) {
 	model := client.GenerativeModel("gemini-pro")
 	cs := model.StartChat()
 
-	model.SafetySettings = []*genai.SafetySetting{
-		{
-			Category:  0,
-			Threshold: 4,
-		},
-		{
-			Category:  1,
-			Threshold: 4,
-		},
-		{
-			Category:  2,
-			Threshold: 4,
-		},
-		{
-			Category:  3,
-			Threshold: 4,
-		},
-		{
-			Category:  4,
-			Threshold: 4,
-		},
-		{
-			Category:  5,
-			Threshold: 4,
-		},
-		{
-			Category:  6,
-			Threshold: 4,
-		},
-		{
-			Category:  7,
-			Threshold: 4,
-		},
-		{
-			Category:  8,
-			Threshold: 4,
-		},
-		{
-			Category:  9,
-			Threshold: 4,
-		},
-		{
-			Category:  10,
-			Threshold: 4,
-		},
-	}
+	// model.SafetySettings = []*genai.SafetySetting{
+	// 	{
+	// 		Category:  0,
+	// 		Threshold: 2,
+	// 	},
+	// 	{
+	// 		Category:  1,
+	// 		Threshold: 2,
+	// 	},
+	// 	{
+	// 		Category:  2,
+	// 		Threshold: 2,
+	// 	},
+	// 	{
+	// 		Category:  3,
+	// 		Threshold: 2,
+	// 	},
+	// 	{
+	// 		Category:  2,
+	// 		Threshold: 2,
+	// 	},
+	// 	{
+	// 		Category:  5,
+	// 		Threshold: 2,
+	// 	},
+	// 	{
+	// 		Category:  6,
+	// 		Threshold: 2,
+	// 	},
+	// 	{
+	// 		Category:  7,
+	// 		Threshold: 2,
+	// 	},
+	// 	{
+	// 		Category:  8,
+	// 		Threshold: 2,
+	// 	},
+	// 	{
+	// 		Category:  9,
+	// 		Threshold: 2,
+	// 	},
+	// 	{
+	// 		Category:  10,
+	// 		Threshold: 2,
+	// 	},
+	// }
 
 	for {
 
 		var query string
-		fmt.Print("Ask: ")
+		d := color.New(color.FgRed, color.Bold)
+		d.Printf("Ask: ")
+
 		reader := bufio.NewReader(os.Stdin)
 		query, err := reader.ReadString('\n')
 		if err != nil {
@@ -90,7 +93,7 @@ func Chat(ctx context.Context) {
 		}
 
 		iter := cs.SendMessageStream(ctx, genai.Text(query))
-		fmt.Print("AI: ")
+		d.Printf("AI: ")
 
 		for {
 			resp, err := iter.Next()
