@@ -77,8 +77,8 @@ func Chat(ctx context.Context) {
 	for {
 
 		var query string
-		d := color.New(color.FgRed, color.Bold)
-		d.Printf("Ask: ")
+		redBold := color.New(color.FgRed, color.Bold)
+		redBold.Printf("Ask: ")
 
 		reader := bufio.NewReader(os.Stdin)
 		query, err := reader.ReadString('\n')
@@ -93,7 +93,8 @@ func Chat(ctx context.Context) {
 		}
 
 		iter := cs.SendMessageStream(ctx, genai.Text(query))
-		d.Printf("AI: ")
+		greenBold := color.New(color.FgGreen, color.Bold)
+		greenBold.Printf("AI: ")
 
 		for {
 			resp, err := iter.Next()
